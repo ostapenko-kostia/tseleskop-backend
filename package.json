@@ -4,7 +4,7 @@
 	"main": "app/server.ts",
 	"scripts": {
 		"dev": "nodemon --watch app --exec ts-node -r tsconfig-paths/register app/server.ts",
-		"start": "node dist/server.js",
+		"start": "node dist/app/server.js",
 		"build": "tsc --project tsconfig.json && tsc-alias -p tsconfig.json",
 		"tsc": "tsc"
 	},
