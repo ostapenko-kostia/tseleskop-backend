@@ -17,7 +17,8 @@ app.use(
 		origin: [
 			'https://tseleskop.vercel.app',
 			'tseleskop.vercel.app',
-			'https://t.me/tseleskop_bot/tseleskop'
+			'https://t.me/tseleskop_bot/tseleskop',
+			'https://celiscope.ru'
 		],
 		credentials: true
 	})
