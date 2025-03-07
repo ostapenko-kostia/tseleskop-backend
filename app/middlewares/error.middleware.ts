@@ -16,6 +16,8 @@ export function errorMiddleware(
 			res.status(err.status).json({ message: err.message })
 		}
 
+		console.log(err)
+
 		res.status(500).json({ message: 'Server Error' })
 	} catch {
 		return next()

@@ -20,7 +20,7 @@ class AuthService {
 		let user: User
 
 		// Hashing password
-		const hashedPin = await bcrypt.hash(data.pin, 3)
+		const hashedPin = await bcrypt.hash(data.pin, 12)
 
 		if (candidate) {
 			const isPasswordMatches = await bcrypt.compare(data.pin, candidate.pin)

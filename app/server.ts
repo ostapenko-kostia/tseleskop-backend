@@ -6,6 +6,7 @@ import cookieParser from 'cookie-parser'
 
 import { authController } from './controllers/auth.controller'
 import { errorMiddleware } from './middlewares/error.middleware'
+import { userController } from './controllers/user.controller'
 
 dotenv.config()
 const app = express()
@@ -15,9 +16,8 @@ app.use(helmet())
 app.use(
 	cors({
 		origin: [
-			'https://tseleskop.vercel.app',
-			'tseleskop.vercel.app',
 			'https://t.me/tseleskop_bot/tseleskop',
+			'http://localhost:5173',
 			'https://celiscope.ru'
 		],
 		credentials: true
@@ -27,6 +27,7 @@ app.use(express.json())
 app.use(cookieParser())
 
 app.use('/api/auth', authController)
+app.use('/api/user', userController)
 
 app.use(errorMiddleware)
 
