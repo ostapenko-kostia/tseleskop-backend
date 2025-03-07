@@ -16,9 +16,6 @@ router.post(
 					expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
 					httpOnly: true
 				})
-				.cookie('accessToken', userData.accessToken, {
-					expires: new Date(Date.now() + 15 * 60 * 1000)
-				})
 				.json(userData)
 		} catch (err) {
 			next(err)
@@ -39,9 +36,6 @@ router.post(
 				.cookie('refreshToken', userData.refreshToken, {
 					expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
 					httpOnly: true
-				})
-				.cookie('accessToken', userData.accessToken, {
-					expires: new Date(Date.now() + 15 * 60 * 1000)
 				})
 				.json(userData)
 		} catch (err) {
