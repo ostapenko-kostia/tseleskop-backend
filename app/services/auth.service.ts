@@ -15,7 +15,7 @@ class AuthService {
 	async auth(data: Data) {
 		// Checking candidate
 		const candidate = await prisma.user.findUnique({
-			where: { id: data.initData.user.id }
+			where: { id: data.initData.user.id.toString() }
 		})
 		let user: User
 
@@ -30,7 +30,7 @@ class AuthService {
 		} else {
 			user = await prisma.user.create({
 				data: {
-					id: data.initData.user.id,
+					id: data.initData.user.id.toString(),
 					firstName: data.initData.user.first_name,
 					lastName: data.initData.user.last_name,
 					username: data.initData.user.username,

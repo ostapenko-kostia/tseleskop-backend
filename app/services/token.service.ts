@@ -13,7 +13,7 @@ class TokenService {
 		return { accessToken, refreshToken }
 	}
 
-	async saveRefresh(token: string, userId: number) {
+	async saveRefresh(token: string, userId: string) {
 		const candidate = await prisma.refreshToken.findUnique({
 			where: { userId }
 		})

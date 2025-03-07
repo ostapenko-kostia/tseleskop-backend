@@ -22,6 +22,7 @@ jobs:
             cd /var/www/tseleskop-backend
             git pull origin main
             bun install
+            npx prisma generate
             bun run build
             pm2 restart backend
           EOF

@@ -1,7 +1,7 @@
 export class UserDto {
 	firstName: string
 	lastName: string
-	id: number
+	id: string
 	username: string
 	photoUrl: string
 

@@ -2,11 +2,11 @@ import { prisma } from 'prisma/prisma-client'
 import bcrypt from 'bcrypt'
 
 class UserService {
-	async getUserById(userId: number) {
+	async getUserById(userId: string) {
 		return await prisma.user.findUnique({ where: { id: userId } })
 	}
 
-	async editUser(userId: number, data: any) {
+	async editUser(userId: string, data: any) {
 		if (data?.pin) data.pin = await bcrypt.hash(data.pin, 12)
 
 		return await prisma.user.update({

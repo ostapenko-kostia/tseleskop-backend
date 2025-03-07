@@ -18,7 +18,7 @@ router.put(
 
 			if (error) throw new ApiError(400, error.message)
 
-			const userId = Number(req.params.id)
+			const userId = req.params.id
 			const userData = await userService.editUser(userId, data)
 
 			res.status(200).json(userData)
