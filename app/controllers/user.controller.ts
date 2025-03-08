@@ -28,4 +28,15 @@ router.put(
 	}
 )
 
+router.get(`/:id`, async (req: Request, res: Response, next: NextFunction) => {
+	try {
+		const userId = req.params.id
+		const userData = await userService.getUserById(userId)
+
+		res.status(200).json(userData)
+	} catch (err) {
+		next(err)
+	}
+})
+
 export const userController = router
