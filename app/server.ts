@@ -20,7 +20,8 @@ app.use(
 			'http://localhost:5173',
 			'https://celiscope.ru'
 		],
-		credentials: true
+		credentials: true,
+		allowedHeaders: ['Content-Type', 'Authorization']
 	})
 )
 app.use(express.json())
