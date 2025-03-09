@@ -51,7 +51,7 @@ router.put(
 				return
 			}
 
-			const fileBuffer = await sharp(req.file.buffer).jpeg().toBuffer();
+			const fileBuffer = await sharp(req.file.buffer).toFormat('png').toBuffer();
 			const userData = await userService.editUserPhoto(userId, fileBuffer)
 
 			res.status(200).json(userData)
