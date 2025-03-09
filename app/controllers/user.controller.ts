@@ -41,6 +41,8 @@ router.put(
 		try {
 			const userId = req.params.id
 
+			console.log(req?.file?.filename)
+
 			if (!req.file) {
 				res.status(400).json({ message: 'No image file uploaded' })
 				return
