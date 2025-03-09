@@ -36,6 +36,10 @@ router.put(
 
 router.put(
 	`/edit-photo/:id`,
+	(req, res, next) => {
+    console.log('Request reached the server');
+    next();
+  },
 	upload.single('image'),
 	async (req: Request, res: Response, next: NextFunction): Promise<void> => {
 		console.log('req')
