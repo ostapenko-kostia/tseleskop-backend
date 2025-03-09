@@ -36,13 +36,8 @@ router.put(
 
 router.put(
 	`/edit-photo/:id`,
-	(req, res, next) => {
-    console.log('Request reached the server');
-    next();
-  },
 	upload.single('image'),
 	async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-		console.log('req')
 		try {
 			const userId = req.params.id
 
@@ -51,7 +46,7 @@ router.put(
 				return
 			}
 
-			const fileBuffer = await sharp(req.file.buffer).toFormat('png').toBuffer();
+			const fileBuffer = await sharp(req.file.buffer).toFormat('png').toBuffer()
 			const userData = await userService.editUserPhoto(userId, fileBuffer)
 
 			res.status(200).json(userData)
