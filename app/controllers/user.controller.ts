@@ -41,14 +41,12 @@ router.put(
 		try {
 			const userId = req.params.id
 
-			console.log(req?.file?.filename)
-
 			if (!req.file) {
 				res.status(400).json({ message: 'No image file uploaded' })
 				return
 			}
 
-			const fileBuffer = await sharp(req.file.buffer).toBuffer();
+			const fileBuffer = await sharp(req.file.buffer).jpeg().toBuffer();
 			const userData = await userService.editUserPhoto(userId, fileBuffer)
 
 			res.status(200).json(userData)
