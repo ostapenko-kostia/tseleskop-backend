@@ -4,6 +4,7 @@ import { userService } from '@/services/user.service'
 import { ApiError } from '@/utils/api-error'
 import { NextFunction, Request, Response, Router } from 'express'
 import multer from 'multer'
+import sharp from 'sharp'
 
 const router = Router()
 
@@ -40,15 +41,12 @@ router.put(
 		try {
 			const userId = req.params.id
 
-			console.log(req.file.filename)
-
-
 			if (!req.file) {
 				res.status(400).json({ message: 'No image file uploaded' })
 				return
 			}
 
-			const fileBuffer = req.file.buffer
+			const fileBuffer = await sharp(req.file.buffer).toBuffer();
 			const userData = await userService.editUserPhoto(userId, fileBuffer)
 
 			res.status(200).json(userData)
