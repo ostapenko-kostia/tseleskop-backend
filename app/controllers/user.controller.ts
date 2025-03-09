@@ -38,6 +38,7 @@ router.put(
 	`/edit-photo/:id`,
 	upload.single('image'),
 	async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+		console.log('req')
 		try {
 			const userId = req.params.id
 
