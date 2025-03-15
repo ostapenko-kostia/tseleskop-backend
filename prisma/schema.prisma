@@ -57,6 +57,8 @@ model SubGoal {
   goal   Goal @relation(references: [id], fields: [goalId])
   goalId Int
 
+  deadline DateTime
+
   description String
   isCompleted Boolean @default(false)
 

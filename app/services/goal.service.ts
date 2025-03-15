@@ -33,16 +33,19 @@ class GoalService {
 			relevant: string
 			privacy: 'PRIVATE' | 'PUBLIC'
 			deadline: '3_MONTHS' | '6_MONTHS' | '1_YEAR'
-			subGoals?: { description: string }[]
+			subGoals?: { description: string; deadline: Date }[]
 		}
 	) {
 		const deadline = getDeadline(data.deadline)
 		const { subGoals, ...dataWithoutSubGoals } = data
-		const { deadline: _, ...dataWithoutSubGoalsAndDeadline } =
-			dataWithoutSubGoals
+
+		delete dataWithoutSubGoals.description
+		delete dataWithoutSubGoals.deadline
+
+		const description = `Полное описание цели: ${data.description}\nКонкретность: ${data.specific}\nИзмеримость: ${data.measurable}\nДостижимость: ${data.attainable}\nНаграда: ${data.award}\nАктуальность: ${data.relevant}`
 
 		const goal = await prisma.goal.create({
-			data: { userId, deadline, ...dataWithoutSubGoalsAndDeadline }
+			data: { userId, deadline, description, ...dataWithoutSubGoals }
 		})
 
 		if (subGoals) {

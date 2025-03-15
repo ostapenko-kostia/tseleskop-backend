@@ -44,6 +44,11 @@ export const goalCreateSchema = Joi.object({
 				'string.empty': 'Описание подцели не может быть пустым',
 				'string.min': 'Описание подцели не может быть пустым',
 				'string.max': 'Описание подцели должно содержать не более 200 символов'
+			}),
+			deadline: Joi.date().required().messages({
+				'date.empty': 'Срок подцели не может быть пустым',
+				'date.base': 'Срок подцели должен быть датой',
+				'date.iso': 'Срок подцели должен быть датой в формате ISO'
 			})
 		})
 	),
