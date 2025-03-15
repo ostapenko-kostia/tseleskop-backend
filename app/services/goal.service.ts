@@ -39,13 +39,10 @@ class GoalService {
 		const deadline = getDeadline(data.deadline)
 		const { subGoals, ...dataWithoutSubGoals } = data
 
-		delete dataWithoutSubGoals.description
 		delete dataWithoutSubGoals.deadline
 
-		const description = `Полное описание цели: ${data.description}\nКонкретность: ${data.specific}\nИзмеримость: ${data.measurable}\nДостижимость: ${data.attainable}\nНаграда: ${data.award}\nАктуальность: ${data.relevant}`
-
 		const goal = await prisma.goal.create({
-			data: { userId, deadline, description, ...dataWithoutSubGoals }
+			data: { userId, deadline, ...dataWithoutSubGoals }
 		})
 
 		if (subGoals) {
