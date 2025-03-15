@@ -18,7 +18,7 @@ export function errorMiddleware(
 
 		console.log(err)
 
-		res.status(500).json({ message: 'Server Error' })
+		res.status(500).json({ message: 'Случилась непредвиденная ошибка' })
 	} catch {
 		return next()
 	}

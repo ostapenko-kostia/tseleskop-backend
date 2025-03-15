@@ -9,16 +9,16 @@ export function authMiddleware(
 ): void {
 	try {
 		const authHeader = req.headers.authorization
-		if (!authHeader) throw new ApiError(401, 'Unauthorized')
+		if (!authHeader) throw new ApiError(401, 'Не авторизован')
 
 		const accessToken = authHeader.split(' ')[1]
-		if (!accessToken) throw new ApiError(401, 'Unauthorized')
+		if (!accessToken) throw new ApiError(401, 'Не авторизован')
 
 		const userData = tokenService.validateAccess(accessToken)
-		if (!userData) throw new ApiError(401, 'Unauthorized')
+		if (!userData) throw new ApiError(401, 'Не авторизован')
 
 		next()
 	} catch {
-		return next(new ApiError(401, 'Unauthorized'))
+		return next(new ApiError(401, 'Не авторизован'))
 	}
 }
