@@ -38,8 +38,9 @@ class GoalService {
 	) {
 		const deadline = getDeadline(data.deadline)
 		const { subGoals, ...dataWithoutSubGoals } = data
-		const { deadline: _, ...dataWithoutSubGoalsAndDeadline } = dataWithoutSubGoals
-		
+		const { deadline: _, ...dataWithoutSubGoalsAndDeadline } =
+			dataWithoutSubGoals
+
 		const goal = await prisma.goal.create({
 			data: { userId, deadline, ...dataWithoutSubGoalsAndDeadline }
 		})
@@ -55,6 +56,13 @@ class GoalService {
 		}
 
 		return { ...goal, subGoals: subGoals || [] }
+	}
+
+	async getGoals(userId: string) {
+		return await prisma.goal.findMany({
+			where: { userId },
+			include: { subGoals: true }
+		})
 	}
 }
 

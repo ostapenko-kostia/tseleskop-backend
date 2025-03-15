@@ -21,9 +21,26 @@ router.post(
 			if (error) throw new ApiError(400, error.message)
 
 			const token = req.headers.authorization?.split(' ')[1]
-			const user = tokenService.validateAccess(token)
+			const user: User = tokenService.validateAccess(token) as User
 
-			const goal = await goalService.createGoal((user as User).id, data)
+			const goal = await goalService.createGoal(user.id, data)
+
+			res.status(200).json(goal)
+		} catch (err) {
+			next(err)
+		}
+	}
+)
+
+router.get(
+	'/',
+	authMiddleware,
+	async (req: Request, res: Response, next: NextFunction) => {
+		try {
+			const token = req.headers.authorization?.split(' ')[1]
+			const user: User = tokenService.validateAccess(token) as User
+
+			const goal = await goalService.getGoals(user.id)
 
 			res.status(200).json(goal)
 		} catch (err) {
