@@ -1,4 +1,4 @@
-import { telegramService } from './services/telegram.service'
+import { notificationService } from './services/notification.service'
 
 // Run daily sub-goals check at 9:00 AM
 const DAILY_CHECK_HOUR = 9
@@ -28,11 +28,11 @@ function scheduleDailyCheck() {
 	setTimeout(async () => {
 		try {
 			// Check today's sub-goals
-			await telegramService.checkTodaySubGoals()
+			await notificationService.checkTodaySubGoals()
 			console.log('Today sub-goals check completed')
 
 			// Check tomorrow's sub-goals
-			await telegramService.checkTomorrowSubGoals()
+			await notificationService.checkTomorrowSubGoals()
 			console.log('Tomorrow sub-goals check completed')
 		} catch (error) {
 			console.error('Error in daily sub-goals check:', error)
@@ -60,7 +60,7 @@ function scheduleMonthlyCheck() {
 
 	setTimeout(async () => {
 		try {
-			await telegramService.checkMonthlyDeadlines()
+			await notificationService.checkMonthlyDeadlines()
 			console.log('Monthly deadlines check completed')
 		} catch (error) {
 			console.error('Error in monthly deadlines check:', error)

@@ -67,7 +67,7 @@ class TelegramService {
 			if (
 				subGoal.goal.user.notificationSettings?.todaySubGoalsNotifications &&
 				subGoal.goal.user.chatId
-			) {          
+			) {
 				await this.sendMessage(
 					subGoal.goal.user.chatId,
 					`📝 <b>Напоминание о подцели</b>\n\nСегодня нужно выполнить подцель "${subGoal.description}" из цели "${subGoal.goal.title}"!`
