@@ -1,6 +1,6 @@
-import { prisma } from 'prisma/prisma-client'
-import bcrypt from 'bcrypt'
 import { deleteFile, uploadFile } from '@/lib/s3'
+import bcrypt from 'bcrypt'
+import { prisma } from 'prisma/prisma-client'
 
 class UserService {
 	async getUserById(userId: string) {

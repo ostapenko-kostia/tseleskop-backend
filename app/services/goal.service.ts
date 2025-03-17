@@ -1,24 +1,5 @@
-import { ApiError } from '@/utils/api-error'
+import { getDeadline } from '@/utils/get-deadline'
 import { prisma } from 'prisma/prisma-client'
-
-function getDeadline(deadline: '3_MONTHS' | '6_MONTHS' | '1_YEAR') {
-	const increments: Record<
-		typeof deadline,
-		{ months?: number; years?: number }
-	> = {
-		'3_MONTHS': { months: 3 },
-		'6_MONTHS': { months: 6 },
-		'1_YEAR': { years: 1 }
-	}
-
-	const date = new Date()
-	if (increments[deadline].months)
-		date.setMonth(date.getMonth() + increments[deadline].months!)
-	if (increments[deadline].years)
-		date.setFullYear(date.getFullYear() + increments[deadline].years!)
-
-	return date
-}
 
 class GoalService {
 	async createGoal(
@@ -86,6 +67,45 @@ class GoalService {
 
 		return goals
 	}
+
+	// async completeGoal(userId: string, goalId: number) {
+	// 	const goal = await prisma.goal.update({
+	// 		where: { id: goalId, userId },
+	// 		data: { isCompleted: true },
+	// 		include: {
+	// 			user: true
+	// 		}
+	// 	})
+
+	// 	// Send notification about goal completion
+	// 	await telegramService.notifyGoalCompleted(goal)
+
+	// 	return goal
+	// }
+
+	// async completeSubGoal(userId: string, subGoalId: number) {
+	// 	const subGoal = await prisma.subGoal.update({
+	// 		where: {
+	// 			id: subGoalId,
+	// 			goal: {
+	// 				userId
+	// 			}
+	// 		},
+	// 		data: { isCompleted: true },
+	// 		include: {
+	// 			goal: {
+	// 				include: {
+	// 					user: true
+	// 				}
+	// 			}
+	// 		}
+	// 	})
+
+	// 	// Send notification about sub-goal completion
+	// 	await telegramService.notifySubGoalCompleted(subGoal)
+
+	// 	return subGoal
+	// }
 }
 
 export const goalService = new GoalService()

@@ -5,6 +5,7 @@ export class UserDto {
 	username: string
 	photoUrl: string
 	inviteCode: string
+	chatId?: string
 
 	constructor(user: any) {
 		this.firstName = user.firstName
@@ -13,5 +14,6 @@ export class UserDto {
 		this.photoUrl = user.photoUrl
 		this.id = user.id
 		this.inviteCode = user.inviteCode
+		this.chatId = user.chatId
 	}
 }

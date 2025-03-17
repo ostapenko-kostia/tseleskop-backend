@@ -9,6 +9,7 @@ import { friendshipController } from './controllers/friendship.controller'
 import { goalController } from './controllers/goal.controller'
 import { userController } from './controllers/user.controller'
 import { errorMiddleware } from './middlewares/error.middleware'
+import './scheduler'
 
 dotenv.config()
 const app = express()

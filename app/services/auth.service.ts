@@ -1,10 +1,10 @@
-import { ApiError } from '@/utils/api-error'
-import { prisma } from 'prisma/prisma-client'
-import bcrypt from 'bcrypt'
-import { tokenService } from './token.service'
 import { UserDto } from '@/dtos/user.dto'
-import { User } from '@prisma/client'
 import { InitData } from '@/typing/interfaces'
+import { ApiError } from '@/utils/api-error'
+import { User } from '@prisma/client'
+import bcrypt from 'bcrypt'
+import { prisma } from 'prisma/prisma-client'
+import { tokenService } from './token.service'
 
 interface Data {
 	initData: InitData
@@ -26,7 +26,15 @@ class AuthService {
 			const isPasswordMatches = await bcrypt.compare(data.pin, candidate.pin)
 			if (!isPasswordMatches) throw new ApiError(400, 'Пин код не верный')
 
-			user = candidate
+			// Update chatId if it's not set
+			if (!candidate.chatId) {
+				user = await prisma.user.update({
+					where: { id: candidate.id },
+					data: { chatId: data.initData.user.id.toString() }
+				})
+			} else {
+				user = candidate
+			}
 		} else {
 			user = await prisma.user.create({
 				data: {
@@ -36,7 +44,8 @@ class AuthService {
 					username: data.initData.user.username,
 					photoUrl: data.initData.user.photo_url,
 					inviteCode: `invite_${data.initData.user.id.toString()}`,
-					pin: hashedPin
+					pin: hashedPin,
+					chatId: data.initData.user.id.toString()
 				}
 			})
 		}

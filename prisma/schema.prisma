@@ -20,6 +20,10 @@ model User {
 
   inviteCode String @unique
 
+  chatId String? @unique
+
+  notificationSettings NotificationSettings?
+
   goals        Goal[]
   refreshToken RefreshToken?
 
@@ -89,6 +93,21 @@ model RefreshToken {
 
   user   User   @relation(fields: [userId], references: [id])
   userId String @unique
+
+  createdAt DateTime @default(dbgenerated("now()"))
+  updatedAt DateTime @default(dbgenerated("now()")) @updatedAt
+}
+
+model NotificationSettings {
+  id String @id @default(uuid())
+
+  user   User   @relation(fields: [userId], references: [id])
+  userId String @unique
+
+  dailySubGoalsNotifications       Boolean @default(true)
+  everyDaySubGoalNotifications     Boolean @default(true)
+  monthlyGoalDeadlineNotifications Boolean @default(true)
+  customNotifications              Boolean @default(true)
 
   createdAt DateTime @default(dbgenerated("now()"))
   updatedAt DateTime @default(dbgenerated("now()")) @updatedAt

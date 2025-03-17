@@ -1,8 +1,10 @@
 import { authMiddleware } from '@/middlewares/auth.middleware'
 import { userEditSchema } from '@/schemas/user-edit.schema'
+import { notificationSettingsService } from '@/services/notification-settings.service'
 import { tokenService } from '@/services/token.service'
 import { userService } from '@/services/user.service'
 import { ApiError } from '@/utils/api-error'
+import { User } from '@prisma/client'
 import { NextFunction, Request, Response, Router } from 'express'
 import multer from 'multer'
 import sharp from 'sharp'
@@ -68,5 +70,40 @@ router.get(`/:id`, async (req: Request, res: Response, next: NextFunction) => {
 		next(err)
 	}
 })
+
+router.get(
+	'/notification-settings',
+	authMiddleware,
+	async (req: Request, res: Response, next: NextFunction) => {
+		try {
+			const token = req.headers.authorization?.split(' ')[1]
+			const user: User = tokenService.validateAccess(token) as User
+
+			const settings = await notificationSettingsService.getSettings(user.id)
+			res.status(200).json(settings)
+		} catch (err) {
+			next(err)
+		}
+	}
+)
+
+router.put(
+	'/notification-settings',
+	authMiddleware,
+	async (req: Request, res: Response, next: NextFunction) => {
+		try {
+			const token = req.headers.authorization?.split(' ')[1]
+			const user: User = tokenService.validateAccess(token) as User
+
+			const settings = await notificationSettingsService.updateSettings(
+				user.id,
+				req.body
+			)
+			res.status(200).json(settings)
+		} catch (err) {
+			next(err)
+		}
+	}
+)
 
 export const userController = router
