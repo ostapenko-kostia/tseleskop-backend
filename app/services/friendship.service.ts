@@ -1,8 +1,25 @@
 import { UserDto } from '@/dtos/user.dto'
+import { ApiError } from '@/utils/api-error'
 import { prisma } from 'prisma/prisma-client'
 
 class FriendshipService {
 	async createFriendship(userId: string, friendId: string) {
+		if (userId === friendId)
+			throw new ApiError(400, 'Нельзя добавить самого себя в друзья')
+
+		const candidate = await prisma.friendship.findFirst({
+			where: {
+				OR: [
+					{ firstUserId: userId, secondUserId: friendId },
+					{ firstUserId: friendId, secondUserId: userId }
+				]
+			}
+		})
+
+		if (candidate) {
+			throw new ApiError(400, 'Дружба уже существует')
+		}
+
 		const friendship = await prisma.friendship.create({
 			data: { firstUserId: userId, secondUserId: friendId }
 		})
