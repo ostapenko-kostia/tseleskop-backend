@@ -18,6 +18,8 @@ model User {
 
   pin String
 
+  inviteCode String @unique
+
   goals        Goal[]
   refreshToken RefreshToken?
 
@@ -49,6 +51,20 @@ model Goal {
 
   createdAt DateTime @default(dbgenerated("now()"))
   updatedAt DateTime @default(dbgenerated("now()")) @updatedAt
+}
+
+model Friendship {
+  id Int @id @default(autoincrement())
+
+  firstUserId  String
+  secondUserId String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([firstUserId, secondUserId])
+  @@index([firstUserId])
+  @@index([secondUserId])
 }
 
 model SubGoal {

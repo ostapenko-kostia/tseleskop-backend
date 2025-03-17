@@ -35,6 +35,7 @@ class AuthService {
 					lastName: data.initData.user.last_name,
 					username: data.initData.user.username,
 					photoUrl: data.initData.user.photo_url,
+					inviteCode: `invite_${data.initData.user.id.toString()}`,
 					pin: hashedPin
 				}
 			})

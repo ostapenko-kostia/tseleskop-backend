@@ -1,3 +1,4 @@
+import { User } from '@prisma/client'
 import jwt from 'jsonwebtoken'
 import { prisma } from 'prisma/prisma-client'
 
@@ -44,9 +45,9 @@ class TokenService {
 		}
 	}
 
-	validateAccess(accessToken: string) {
+	validateAccess(accessToken: string): User {
 		try {
-			return jwt.verify(accessToken, process.env.ACCESS_SECRET)
+			return jwt.verify(accessToken, process.env.ACCESS_SECRET) as User
 		} catch {
 			return null
 		}

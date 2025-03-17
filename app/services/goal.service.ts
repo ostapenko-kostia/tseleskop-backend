@@ -1,3 +1,4 @@
+import { ApiError } from '@/utils/api-error'
 import { prisma } from 'prisma/prisma-client'
 
 function getDeadline(deadline: '3_MONTHS' | '6_MONTHS' | '1_YEAR') {
@@ -61,6 +62,24 @@ class GoalService {
 	async getGoals(userId: string) {
 		return await prisma.goal.findMany({
 			where: { userId },
+			include: { subGoals: true }
+		})
+	}
+
+	async getFriendGoals(userId: string, friendId: string) {
+		const friendship = await prisma.friendship.findUnique({
+			where: {
+				firstUserId_secondUserId: {
+					firstUserId: userId,
+					secondUserId: friendId
+				}
+			}
+		})
+
+		if (!friendship) throw new ApiError(400, 'Friendship not found')
+
+		return await prisma.goal.findMany({
+			where: { userId: friendId, privacy: 'PUBLIC' },
 			include: { subGoals: true }
 		})
 	}
