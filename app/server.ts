@@ -1,14 +1,14 @@
+import cookieParser from 'cookie-parser'
 import cors from 'cors'
 import dotenv from 'dotenv'
 import express from 'express'
 import helmet from 'helmet'
-import cookieParser from 'cookie-parser'
 
 import { authController } from './controllers/auth.controller'
-import { errorMiddleware } from './middlewares/error.middleware'
-import { userController } from './controllers/user.controller'
-import { goalController } from './controllers/goal.controller'
 import { friendshipController } from './controllers/friendship.controller'
+import { goalController } from './controllers/goal.controller'
+import { userController } from './controllers/user.controller'
+import { errorMiddleware } from './middlewares/error.middleware'
 
 dotenv.config()
 const app = express()

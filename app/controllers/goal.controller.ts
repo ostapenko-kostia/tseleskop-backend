@@ -49,17 +49,14 @@ router.get(
 	}
 )
 router.get(
-	'/friend/:friendId',
+	'/friends',
 	authMiddleware,
 	async (req: Request, res: Response, next: NextFunction) => {
 		try {
 			const token = req.headers.authorization?.split(' ')[1]
 			const user: User = tokenService.validateAccess(token) as User
-			const friendId = req.params.friendId
 
-			if (!friendId) throw new ApiError(400, 'Friend ID is required')
-
-			const goal = await goalService.getFriendGoals(user.id, friendId)
+			const goal = await goalService.getFriendGoals(user.id)
 
 			res.status(200).json(goal)
 		} catch (err) {

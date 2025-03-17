@@ -66,22 +66,25 @@ class GoalService {
 		})
 	}
 
-	async getFriendGoals(userId: string, friendId: string) {
-		const friendship = await prisma.friendship.findUnique({
+	async getFriendGoals(userId: string) {
+		const friendShips = await prisma.friendship.findMany({
 			where: {
-				firstUserId_secondUserId: {
-					firstUserId: userId,
-					secondUserId: friendId
-				}
+				OR: [{ firstUserId: userId }, { secondUserId: userId }]
 			}
 		})
 
-		if (!friendship) throw new ApiError(400, 'Friendship not found')
+		const friendsIds = friendShips.map(friendship => {
+			return friendship.firstUserId === userId
+				? friendship.secondUserId
+				: friendship.firstUserId
+		})
 
-		return await prisma.goal.findMany({
-			where: { userId: friendId, privacy: 'PUBLIC' },
+		const goals = await prisma.goal.findMany({
+			where: { userId: { in: friendsIds }, privacy: 'PUBLIC' },
 			include: { subGoals: true }
 		})
+
+		return goals
 	}
 }
 

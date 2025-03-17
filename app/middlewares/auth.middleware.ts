@@ -18,7 +18,8 @@ export function authMiddleware(
 		if (!userData) throw new ApiError(401, 'Не авторизован')
 
 		next()
-	} catch {
+	} catch (error) {
+		console.log('Auth Middleware - Error:', error)
 		return next(new ApiError(401, 'Не авторизован'))
 	}
 }

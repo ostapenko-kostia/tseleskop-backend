@@ -1,5 +1,6 @@
 import { authMiddleware } from '@/middlewares/auth.middleware'
 import { userEditSchema } from '@/schemas/user-edit.schema'
+import { tokenService } from '@/services/token.service'
 import { userService } from '@/services/user.service'
 import { ApiError } from '@/utils/api-error'
 import { NextFunction, Request, Response, Router } from 'express'
@@ -36,6 +37,7 @@ router.put(
 
 router.put(
 	`/edit-photo/:id`,
+	authMiddleware,
 	upload.single('image'),
 	async (req: Request, res: Response, next: NextFunction): Promise<void> => {
 		try {

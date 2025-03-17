@@ -1,3 +1,4 @@
+import { UserDto } from '@/dtos/user.dto'
 import { prisma } from 'prisma/prisma-client'
 
 class FriendshipService {
@@ -20,6 +21,30 @@ class FriendshipService {
 		})
 
 		return friendship
+	}
+
+	async getFriends(userId: string) {
+		const friendShips = await prisma.friendship.findMany({
+			where: {
+				OR: [{ firstUserId: userId }, { secondUserId: userId }]
+			}
+		})
+
+		const friendsIds = friendShips.map(friendship => {
+			return friendship.firstUserId === userId
+				? friendship.secondUserId
+				: friendship.firstUserId
+		})
+
+		const friends = await prisma.user.findMany({
+			where: {
+				id: { in: friendsIds }
+			}
+		})
+
+		const friendsDto = friends.map(friend => new UserDto(friend))
+
+		return friendsDto
 	}
 }
 
