@@ -38,7 +38,7 @@ class TelegramService {
 		}
 	}
 
-	async checkDailySubGoals() {
+	async checkTodaySubGoals() {
 		const today = new Date()
 		today.setHours(0, 0, 0, 0)
 
@@ -65,12 +65,51 @@ class TelegramService {
 
 		for (const subGoal of subGoals) {
 			if (
-				subGoal.goal.user.notificationSettings?.dailySubGoalsNotifications &&
+				subGoal.goal.user.notificationSettings?.todaySubGoalsNotifications &&
+				subGoal.goal.user.chatId
+			) {          
+				await this.sendMessage(
+					subGoal.goal.user.chatId,
+					`📝 <b>Напоминание о подцели</b>\n\nСегодня нужно выполнить подцель "${subGoal.description}" из цели "${subGoal.goal.title}"!`
+				)
+			}
+		}
+	}
+
+	async checkTomorrowSubGoals() {
+		const tomorrow = new Date()
+		tomorrow.setDate(tomorrow.getDate() + 1)
+		tomorrow.setHours(0, 0, 0, 0)
+
+		const subGoals = await prisma.subGoal.findMany({
+			where: {
+				deadline: {
+					gte: tomorrow,
+					lt: new Date(tomorrow.getTime() + 24 * 60 * 60 * 1000)
+				},
+				isCompleted: false
+			},
+			include: {
+				goal: {
+					include: {
+						user: {
+							include: {
+								notificationSettings: true
+							}
+						}
+					}
+				}
+			}
+		})
+
+		for (const subGoal of subGoals) {
+			if (
+				subGoal.goal.user.notificationSettings?.tomorrowSubGoalNotifications &&
 				subGoal.goal.user.chatId
 			) {
 				await this.sendMessage(
 					subGoal.goal.user.chatId,
-					`📝 <b>Напоминание о подцели</b>\n\nСегодня нужно выполнить подцель "${subGoal.description}" из цели "${subGoal.goal.title}"!`
+					`📝 <b>Напоминание о подцели</b>\n\nЗавтра нужно выполнить подцель "${subGoal.description}" из цели "${subGoal.goal.title}"!`
 				)
 			}
 		}
@@ -122,7 +161,7 @@ class TelegramService {
 		if (user?.notificationSettings?.customNotifications && user.chatId) {
 			await this.sendMessage(
 				user.chatId,
-				`�� <b>Поздравляем!</b>\n\nВы успешно выполнили цель "${goal.title}"!`
+				`🎉 <b>Поздравляем!</b>\n\nВы успешно выполнили цель "${goal.title}"!`
 			)
 		}
 	}
@@ -140,7 +179,7 @@ class TelegramService {
 		})
 
 		if (
-			goal?.user?.notificationSettings?.customNotifications &&
+			goal?.user.notificationSettings?.tomorrowSubGoalNotifications &&
 			goal.user.chatId
 		) {
 			await this.sendMessage(

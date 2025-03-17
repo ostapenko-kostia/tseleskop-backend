@@ -1,11 +1,11 @@
 import { telegramService } from './services/telegram.service'
 
 // Run daily sub-goals check at 9:00 AM
-const DAILY_CHECK_HOUR = 10
+const DAILY_CHECK_HOUR = 9
 const DAILY_CHECK_MINUTE = 0
 
-// Run monthly deadlines check at 10:00 AM
-const MONTHLY_CHECK_HOUR = 10
+// Run monthly deadlines check at 9:00 AM
+const MONTHLY_CHECK_HOUR = 9
 const MONTHLY_CHECK_MINUTE = 0
 
 function scheduleDailyCheck() {
@@ -27,8 +27,13 @@ function scheduleDailyCheck() {
 
 	setTimeout(async () => {
 		try {
-			await telegramService.checkDailySubGoals()
-			console.log('Daily sub-goals check completed')
+			// Check today's sub-goals
+			await telegramService.checkTodaySubGoals()
+			console.log('Today sub-goals check completed')
+
+			// Check tomorrow's sub-goals
+			await telegramService.checkTomorrowSubGoals()
+			console.log('Tomorrow sub-goals check completed')
 		} catch (error) {
 			console.error('Error in daily sub-goals check:', error)
 		}

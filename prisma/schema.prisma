@@ -104,8 +104,8 @@ model NotificationSettings {
   user   User   @relation(fields: [userId], references: [id])
   userId String @unique
 
-  dailySubGoalsNotifications       Boolean @default(true)
-  everyDaySubGoalNotifications     Boolean @default(true)
+  todaySubGoalsNotifications       Boolean @default(true)
+  tomorrowSubGoalNotifications     Boolean @default(true)
   monthlyGoalDeadlineNotifications Boolean @default(true)
   customNotifications              Boolean @default(true)
 
