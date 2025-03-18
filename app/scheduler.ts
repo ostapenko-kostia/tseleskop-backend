@@ -1,74 +1,58 @@
 import { notificationService } from './services/notification.service'
+import { prisma } from 'prisma/prisma-client'
 
-// Run daily sub-goals check at 9:00 AM
-const DAILY_CHECK_HOUR = 9
-const DAILY_CHECK_MINUTE = 0
+// Run daily sub-goals check based on user-defined times
+async function scheduleNotifications() {
+    const users = await prisma.user.findMany({
+        include: { notificationSettings: true }
+    })
 
-// Run monthly deadlines check at 9:00 AM
-const MONTHLY_CHECK_HOUR = 9
-const MONTHLY_CHECK_MINUTE = 0
+    users.forEach(user => {
+        if (user.notificationSettings?.todaySubGoalsNotificationsTime) {
+            const [hours, minutes] = user.notificationSettings.todaySubGoalsNotificationsTime.split(':').map(Number)
+            scheduleNotification(user, hours, minutes, 'today')
+        }
 
-function scheduleDailyCheck() {
-	const now = new Date()
-	const scheduledTime = new Date(
-		now.getFullYear(),
-		now.getMonth(),
-		now.getDate(),
-		DAILY_CHECK_HOUR,
-		DAILY_CHECK_MINUTE,
-		0
-	)
+        if (user.notificationSettings?.tomorrowSubGoalNotificationsTime) {
+            const [hours, minutes] = user.notificationSettings.tomorrowSubGoalNotificationsTime.split(':').map(Number)
+            scheduleNotification(user, hours, minutes, 'tomorrow')
+        }
 
-	if (now > scheduledTime) {
-		scheduledTime.setDate(scheduledTime.getDate() + 1)
-	}
-
-	const timeUntilScheduled = scheduledTime.getTime() - now.getTime()
-
-	setTimeout(async () => {
-		try {
-			// Check today's sub-goals
-			await notificationService.checkTodaySubGoals()
-			console.log('Today sub-goals check completed')
-
-			// Check tomorrow's sub-goals
-			await notificationService.checkTomorrowSubGoals()
-			console.log('Tomorrow sub-goals check completed')
-		} catch (error) {
-			console.error('Error in daily sub-goals check:', error)
-		}
-		scheduleDailyCheck() // Schedule next day
-	}, timeUntilScheduled)
+        if (user.notificationSettings?.monthlyGoalDeadlineNotificationsTime) {
+            const [hours, minutes] = user.notificationSettings.monthlyGoalDeadlineNotificationsTime.split(':').map(Number)
+            scheduleNotification(user, hours, minutes, 'monthly')
+        }
+    })
 }
 
-function scheduleMonthlyCheck() {
-	const now = new Date()
-	const scheduledTime = new Date(
-		now.getFullYear(),
-		now.getMonth(),
-		now.getDate(),
-		MONTHLY_CHECK_HOUR,
-		MONTHLY_CHECK_MINUTE,
-		0
-	)
+function scheduleNotification(user: any, hours: number, minutes: number, type: 'today' | 'tomorrow' | 'monthly') {
+    const now = new Date()
+    const notificationTime = new Date()
+    notificationTime.setHours(hours, minutes, 0, 0)
 
-	if (now > scheduledTime) {
-		scheduledTime.setDate(scheduledTime.getDate() + 1)
-	}
+    if (notificationTime <= now) {
+        notificationTime.setDate(notificationTime.getDate() + 1)
+    }
 
-	const timeUntilScheduled = scheduledTime.getTime() - now.getTime()
+    const delay = notificationTime.getTime() - now.getTime()
 
-	setTimeout(async () => {
-		try {
-			await notificationService.checkMonthlyDeadlines()
-			console.log('Monthly deadlines check completed')
-		} catch (error) {
-			console.error('Error in monthly deadlines check:', error)
-		}
-		scheduleMonthlyCheck() // Schedule next day
-	}, timeUntilScheduled)
+    setTimeout(async () => {
+        try {
+            if (type === 'today') {
+                await notificationService.checkTodaySubGoals(user)
+            } else if (type === 'tomorrow') {
+                await notificationService.checkTomorrowSubGoals(user)
+            } else if (type === 'monthly') {
+                await notificationService.checkMonthlyDeadlines(user)
+            }
+        } catch (error) {
+            console.error(`Error in notification for ${type}:`, error)
+        }
+
+        // Re-run the schedule for the next day
+        scheduleNotification(user, hours, minutes, type)
+    }, delay)
 }
 
-// Start the schedulers
-scheduleDailyCheck()
-scheduleMonthlyCheck()
+// Start the scheduler
+scheduleNotifications()

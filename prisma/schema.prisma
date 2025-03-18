@@ -109,6 +109,10 @@ model NotificationSettings {
   monthlyGoalDeadlineNotifications Boolean @default(true)
   customNotifications              Boolean @default(true)
 
+  todaySubGoalsNotificationsTime       String @default("09:00")
+  tomorrowSubGoalNotificationsTime     String @default("09:00")
+  monthlyGoalDeadlineNotificationsTime String @default("09:00")
+
   createdAt DateTime @default(dbgenerated("now()"))
   updatedAt DateTime @default(dbgenerated("now()")) @updatedAt
 }
