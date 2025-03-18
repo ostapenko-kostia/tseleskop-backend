@@ -3,16 +3,15 @@ import { prisma } from 'prisma/prisma-client'
 
 class NotificationSettingsService {
 	async getSettings(userId: string): Promise<NotificationSettings> {
-		const user = await prisma.user.findUnique({
-			where: { id: userId },
-			include: { notificationSettings: true }
+		const notificationSettings = await prisma.notificationSettings.findUnique({
+			where: { userId },
 		})
 
-		if (!user?.notificationSettings) {
+		if (!notificationSettings) {
 			return await this.createDefaultSettings(userId)
 		}
 
-		return user.notificationSettings
+		return notificationSettings
 	}
 
 	async updateSettings(

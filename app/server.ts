@@ -10,6 +10,7 @@ import { goalController } from './controllers/goal.controller'
 import { userController } from './controllers/user.controller'
 import { errorMiddleware } from './middlewares/error.middleware'
 import './scheduler'
+import { settingsController } from './controllers/settings.controller'
 
 dotenv.config()
 const app = express()
@@ -19,7 +20,7 @@ app.use(helmet())
 app.use(
 	cors({
 		origin: [
-			'https://t.me/tseleskop_bot/tseleskop',
+			'https://t.me/celiscope_bot/celiscope',
 			'http://localhost:5173',
 			'https://celiscope.ru'
 		],
@@ -34,6 +35,7 @@ app.use('/api/auth', authController)
 app.use('/api/user', userController)
 app.use('/api/goal', goalController)
 app.use('/api/friendship', friendshipController)
+app.use('/api/settings', settingsController)
 
 app.use(errorMiddleware)
 
