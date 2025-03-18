@@ -56,17 +56,10 @@ router.get(
 	authMiddleware,
 	async (req: Request, res: Response, next: NextFunction) => {
 		try {
-			console.log('Headers:', req.headers)
-			console.log('Authorization:', req.headers.authorization)
-
 			const accessToken = req.headers.authorization.split(' ')[1]
-			console.log('Access Token:', accessToken)
-
 			const { id: userId } = tokenService.validateAccess(accessToken)
-			console.log('User ID:', userId)
 
 			const friends = await friendshipService.getFriends(userId)
-			console.log('Friends:', friends)
 
 			res.status(200).json(friends)
 		} catch (err) {
