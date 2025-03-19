@@ -99,9 +99,9 @@ class NotificationService {
 		goal: Goal,
 		when: 'today' | 'tomorrow'
 	) {
-		const message = `📝 <b>Напоминание о подцели</b>\n\n${
+		const message = `📝 <b>Напоминание о задаче</b>\n\n${
 			when === 'today' ? 'Сегодня' : 'Завтра'
-		} нужно выполнить подцель "${subGoal.description}" из цели "${goal.title}"!`
+		} нужно выполнить задачу "${subGoal.description}" из цели "${goal.title}"!`
 
 		await telegramService.sendMessage(user.chatId!, message)
 	}
