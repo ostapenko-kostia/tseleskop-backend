@@ -1,5 +1,6 @@
 import { getDeadline } from '@/utils/get-deadline'
 import { prisma } from 'prisma/prisma-client'
+import { telegramService } from './telegram.service'
 
 class GoalService {
 	async createGoal(
@@ -83,29 +84,26 @@ class GoalService {
 	// 	return goal
 	// }
 
-	// async completeSubGoal(userId: string, subGoalId: number) {
-	// 	const subGoal = await prisma.subGoal.update({
-	// 		where: {
-	// 			id: subGoalId,
-	// 			goal: {
-	// 				userId
-	// 			}
-	// 		},
-	// 		data: { isCompleted: true },
-	// 		include: {
-	// 			goal: {
-	// 				include: {
-	// 					user: true
-	// 				}
-	// 			}
-	// 		}
-	// 	})
+	async completeSubGoal(userId: string, subGoalId: number) {
+		const subGoal = await prisma.subGoal.update({
+			where: {
+				id: subGoalId,
+				goal: {
+					userId
+				}
+			},
+			data: { isCompleted: true, completedAt: new Date() },
+			include: {
+				goal: {
+					include: {
+						user: true
+					}
+				}
+			}
+		})
 
-	// 	// Send notification about sub-goal completion
-	// 	await telegramService.notifySubGoalCompleted(subGoal)
-
-	// 	return subGoal
-	// }
+		return subGoal
+	}
 }
 
 export const goalService = new GoalService()

@@ -82,8 +82,9 @@ model SubGoal {
   description String
   isCompleted Boolean @default(false)
 
-  createdAt DateTime @default(dbgenerated("now()"))
-  updatedAt DateTime @default(dbgenerated("now()")) @updatedAt
+  completedAt DateTime?
+  createdAt   DateTime  @default(dbgenerated("now()"))
+  updatedAt   DateTime  @default(dbgenerated("now()")) @updatedAt
 }
 
 model RefreshToken {
