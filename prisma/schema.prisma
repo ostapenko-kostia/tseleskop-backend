@@ -47,14 +47,14 @@ model Goal {
   relevant     String
   description  String
   award        String
+  deadline     DateTime
+  imageUrl     String?       @default("https://celiscope.ru/placeholder-image.jpg")
+  privacy      PRIVACY       @default(PRIVATE)
+  isCompleted  Boolean       @default(false)
 
-  deadline DateTime
-  privacy  PRIVACY  @default(PRIVATE)
-
-  isCompleted Boolean @default(false)
-
-  createdAt DateTime @default(dbgenerated("now()"))
-  updatedAt DateTime @default(dbgenerated("now()")) @updatedAt
+  completedAt DateTime?
+  createdAt   DateTime  @default(dbgenerated("now()"))
+  updatedAt   DateTime  @default(dbgenerated("now()")) @updatedAt
 }
 
 model Friendship {

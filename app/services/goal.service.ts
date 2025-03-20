@@ -1,6 +1,6 @@
 import { getDeadline } from '@/utils/get-deadline'
 import { prisma } from 'prisma/prisma-client'
-import { telegramService } from './telegram.service'
+import { uploadFile } from '@/lib/s3'
 
 class GoalService {
 	async createGoal(
@@ -16,6 +16,7 @@ class GoalService {
 			relevant: string
 			privacy: 'PRIVATE' | 'PUBLIC'
 			deadline: '3_MONTHS' | '6_MONTHS' | '1_YEAR'
+			imageUrl: string
 			subGoals?: { description: string; deadline: Date }[]
 		}
 	) {
@@ -69,20 +70,21 @@ class GoalService {
 		return goals
 	}
 
-	// async completeGoal(userId: string, goalId: number) {
-	// 	const goal = await prisma.goal.update({
-	// 		where: { id: goalId, userId },
-	// 		data: { isCompleted: true },
-	// 		include: {
-	// 			user: true
-	// 		}
-	// 	})
+	async completeGoal(userId: string, goalId: number, fileBuffer: Buffer) {
+		const completedImageUrl = await uploadFile(
+			fileBuffer,
+			`goal-${goalId}-${Date.now()}.jpg`
+		)
+		const goal = await prisma.goal.update({
+			where: { id: goalId, userId },
+			data: { isCompleted: true, completedAt: new Date(), imageUrl: completedImageUrl },
+			include: {
+				user: true
+			}
+		})
 
-	// 	// Send notification about goal completion
-	// 	await telegramService.notifyGoalCompleted(goal)
-
-	// 	return goal
-	// }
+		return goal
+	}
 
 	async completeSubGoal(userId: string, subGoalId: number) {
 		const subGoal = await prisma.subGoal.update({
